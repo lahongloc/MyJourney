@@ -36,20 +36,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
 //        this.userDAO = new UserDAO(this);
 //        long newUserId = userDAO.insertUser("john_doe", "password123", "John Doe", "john@example.com", "admin");
-        displayUsers();
+//        displayUsers();
 
 
 //        this.notificationDAO = new NotificationDAO(this);
 //        long newNotificationId = notificationDAO.insertNotification("Đi chơi");
-        displayNotifications();
+//        displayNotifications();
 
 //        this.categoryDAO = new CategoryDAO(this);
 //        long newCategoryId = categoryDAO.insertCategory((int) newNotificationId, "Thông báo gấp", "Đây là thông báo gấp, trước 30'!", "30 phút");
-        displayCategories();
+//        displayCategories();
     }
 
     private void displayUsers() {

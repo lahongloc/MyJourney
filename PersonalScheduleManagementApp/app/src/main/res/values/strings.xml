@@ -6,6 +6,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="header_image_desc">Hình ảnh tiêu đề trang đăng nhập</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -43,4 +44,12 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="login_to_app">Login</string>
+    <string name="username_or_email">Username or email\n</string>
+    <string name="password">Password</string>
+    <string name="txt_title">Đăng nhập</string>
+    <string name="txt_username">Tên đăng nhập</string>
+    <string name="txt_password">Mật khẩu</string>
+    <string name="btn_login">Đăng nhập</string>
 </resources>
