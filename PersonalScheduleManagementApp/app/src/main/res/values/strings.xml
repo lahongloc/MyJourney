@@ -52,4 +52,5 @@
     <string name="txt_username">Tên đăng nhập</string>
     <string name="txt_password">Mật khẩu</string>
     <string name="btn_login">Đăng nhập</string>
+    <string name="btn_register">Đăng ký</string>
 </resources>

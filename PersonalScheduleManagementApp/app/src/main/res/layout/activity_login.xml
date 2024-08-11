@@ -64,4 +64,15 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_background" />
 
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_register"
+        android:layout_marginTop="24dp"
+        android:layout_below="@id/login_button"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_background" />
+
 </RelativeLayout>

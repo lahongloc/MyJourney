@@ -47,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_USER_TABLE =
             "CREATE TABLE " + TABLE_USER + " (" +
                     COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_USER_USERNAME + " TEXT NOT NULL, " +
+                    COLUMN_USER_USERNAME + " TEXT NOT NULL UNIQUE, " +
                     COLUMN_USER_PASSWORD + " TEXT NOT NULL, " +
                     COLUMN_USER_FULLNAME + " TEXT, " +
                     COLUMN_USER_EMAIL + " TEXT, " +
@@ -66,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_CATEGORY_NOTIFICATION_ID + " INTEGER, " +
                     COLUMN_CATEGORY_NAME + " TEXT NOT NULL, " +
                     COLUMN_CATEGORY_DESCRIPTION + " TEXT, " +
-                    COLUMN_CATEGORY_REMIND_TIME + " TEXT, " +
+                    COLUMN_CATEGORY_REMIND_TIME + " INTEGER, " +
                     "FOREIGN KEY(" + COLUMN_CATEGORY_NOTIFICATION_ID + ") REFERENCES " + TABLE_NOTIFICATION + "(" + COLUMN_NOTIFICATION_ID + "));";
 
     // Create Schedule Table SQL
@@ -77,7 +77,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_SCHEDULE_SOUND + " TEXT, " +
                     COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL, " +
                     COLUMN_SCHEDULE_DESCRIPTION + " TEXT, " +
-                    COLUMN_SCHEDULE_TIME + " TEXT, " +
+                    COLUMN_SCHEDULE_TIME + " INTEGER, " +
                     COLUMN_SCHEDULE_STATUS + " TEXT, " +
                     "FOREIGN KEY(" + COLUMN_SCHEDULE_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "));";
 

@@ -8,6 +8,7 @@ import com.example.personalschedulemanagementapp.dao.NotificationDAO;
 import com.example.personalschedulemanagementapp.dao.ScheduleDAO;
 import com.example.personalschedulemanagementapp.dao.UserDAO;
 import com.example.personalschedulemanagementapp.data.DatabaseHelper;
+import com.example.personalschedulemanagementapp.entity.Role;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,20 +37,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_main);
 
-//        this.userDAO = new UserDAO(this);
-//        long newUserId = userDAO.insertUser("john_doe", "password123", "John Doe", "john@example.com", "admin");
-//        displayUsers();
+        this.userDAO = new UserDAO(this);
+        long newUserId = userDAO.insertUser("john_doe", "password123", "John Doe", "john@example.com", Role.ADMIN.name());
+        displayUsers();
 
 
-//        this.notificationDAO = new NotificationDAO(this);
-//        long newNotificationId = notificationDAO.insertNotification("Đi chơi");
-//        displayNotifications();
+        this.notificationDAO = new NotificationDAO(this);
+        long newNotificationId = notificationDAO.insertNotification("Đi chơi");
+        displayNotifications();
 
-//        this.categoryDAO = new CategoryDAO(this);
-//        long newCategoryId = categoryDAO.insertCategory((int) newNotificationId, "Thông báo gấp", "Đây là thông báo gấp, trước 30'!", "30 phút");
-//        displayCategories();
+        this.categoryDAO = new CategoryDAO(this);
+        long newCategoryId = categoryDAO.insertCategory((int) newNotificationId, "Thông báo gấp", "Đây là thông báo gấp, trước 30'!", "30 phút");
+        displayCategories();
     }
 
     private void displayUsers() {
