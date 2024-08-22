@@ -4,23 +4,21 @@ import java.util.Calendar;
 
 public class Schedule {
     private int id;
-    private String sounds;
     private String title;
     private String description;
     private Calendar time;
     private String status;
-    private int categoryId;
+    private Category category;
 
     public Schedule() {}
 
-    public Schedule(int id, String sounds, String title, String description, Calendar time, String status, int categoryId) {
+    public Schedule(int id, String title, String description, Calendar time, String status, Category category) {
         this.id = id;
-        this.sounds = sounds;
         this.title = title;
         this.description = description;
         this.time = time;
         this.status = status;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
     public int getId() {
@@ -29,14 +27,6 @@ public class Schedule {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getSounds() {
-        return sounds;
-    }
-
-    public void setSounds(String sounds) {
-        this.sounds = sounds;
     }
 
     public String getTitle() {
@@ -71,11 +61,11 @@ public class Schedule {
         this.status = status;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

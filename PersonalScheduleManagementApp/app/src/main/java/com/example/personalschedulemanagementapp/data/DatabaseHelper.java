@@ -11,7 +11,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Table names
     public static final String TABLE_USER = "User";
-    public static final String TABLE_NOTIFICATION = "Notification";
+    public static final String TABLE_SOUND = "Sound";
     public static final String TABLE_CATEGORY = "Category";
     public static final String TABLE_SCHEDULE = "Schedule";
 
@@ -23,13 +23,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_EMAIL = "email";
     public static final String COLUMN_USER_ROLE = "role";
 
-    // Notification Table Columns
-    public static final String COLUMN_NOTIFICATION_ID = "id";
-    public static final String COLUMN_NOTIFICATION_CONTENT = "content";
+    // Sound Table Columns
+    public static final String COLUMN_SOUND_ID = "id";
+    public static final String COLUMN_SOUND_NAME = "name";
+    public static final String COLUMN_SOUND_SOUNDID = "soundId";
 
     // Category Table Columns
     public static final String COLUMN_CATEGORY_ID = "id";
-    public static final String COLUMN_CATEGORY_NOTIFICATION_ID = "notificationId";
+    public static final String COLUMN_CATEGORY_SOUND_ID = "soundId";
     public static final String COLUMN_CATEGORY_NAME = "name";
     public static final String COLUMN_CATEGORY_DESCRIPTION = "description";
     public static final String COLUMN_CATEGORY_REMIND_TIME = "remindTime";
@@ -37,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Schedule Table Columns
     public static final String COLUMN_SCHEDULE_ID = "id";
     public static final String COLUMN_SCHEDULE_CATEGORY_ID = "categoryId";
-    public static final String COLUMN_SCHEDULE_SOUND = "sound";
+//    public static final String COLUMN_SCHEDULE_SOUND = "sound";
     public static final String COLUMN_SCHEDULE_TITLE = "title";
     public static final String COLUMN_SCHEDULE_DESCRIPTION = "description";
     public static final String COLUMN_SCHEDULE_TIME = "time";
@@ -53,28 +54,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_USER_EMAIL + " TEXT, " +
                     COLUMN_USER_ROLE + " TEXT);";
 
-    // Create Notification Table SQL
-    private static final String CREATE_NOTIFICATION_TABLE =
-            "CREATE TABLE " + TABLE_NOTIFICATION + " (" +
-                    COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NOTIFICATION_CONTENT + " TEXT NOT NULL);";
+    // Create Sound Table SQL
+    private static final String CREATE_SOUND_TABLE =
+            "CREATE TABLE " + TABLE_SOUND + " (" +
+                    COLUMN_SOUND_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_SOUND_NAME + " TEXT NOT NULL, " +
+                    COLUMN_SOUND_SOUNDID + " INTERGER NOT NULL);";
 
     // Create Category Table SQL
     private static final String CREATE_CATEGORY_TABLE =
             "CREATE TABLE " + TABLE_CATEGORY + " (" +
                     COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_CATEGORY_NOTIFICATION_ID + " INTEGER, " +
+                    COLUMN_CATEGORY_SOUND_ID + " INTEGER, " +
                     COLUMN_CATEGORY_NAME + " TEXT NOT NULL, " +
                     COLUMN_CATEGORY_DESCRIPTION + " TEXT, " +
                     COLUMN_CATEGORY_REMIND_TIME + " INTEGER, " +
-                    "FOREIGN KEY(" + COLUMN_CATEGORY_NOTIFICATION_ID + ") REFERENCES " + TABLE_NOTIFICATION + "(" + COLUMN_NOTIFICATION_ID + "));";
+                    "FOREIGN KEY(" + COLUMN_CATEGORY_SOUND_ID + ") REFERENCES " + TABLE_SOUND + "(" + COLUMN_SOUND_ID + "));";
 
     // Create Schedule Table SQL
     private static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE " + TABLE_SCHEDULE + " (" +
                     COLUMN_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_SCHEDULE_CATEGORY_ID + " INTEGER, " +
-                    COLUMN_SCHEDULE_SOUND + " TEXT, " +
+//                    COLUMN_SCHEDULE_SOUND + " TEXT, " +
                     COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL, " +
                     COLUMN_SCHEDULE_DESCRIPTION + " TEXT, " +
                     COLUMN_SCHEDULE_TIME + " INTEGER, " +
@@ -88,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
-        db.execSQL(CREATE_NOTIFICATION_TABLE);
+        db.execSQL(CREATE_SOUND_TABLE);
         db.execSQL(CREATE_CATEGORY_TABLE);
         db.execSQL(CREATE_SCHEDULE_TABLE);
     }
@@ -97,7 +99,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCHEDULE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOUND);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         onCreate(db);
     }
