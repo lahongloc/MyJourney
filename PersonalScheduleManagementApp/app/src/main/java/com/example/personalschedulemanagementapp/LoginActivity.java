@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                     if (user.getRole().equals(Role.ADMIN.name())) {
-                        Intent intent = new Intent(this, MainActivity.class);
+                        Intent intent = new Intent(this, UserListActivity.class);
                         startActivity(intent);
                     } else if (user.getRole().equals(Role.USER.name())) {
                         Intent intent = new Intent(this, UserActivity.class);

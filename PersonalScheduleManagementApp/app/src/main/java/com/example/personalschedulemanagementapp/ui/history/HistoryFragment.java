@@ -1,4 +1,4 @@
-package com.example.personalschedulemanagementapp.ui.home;
+package com.example.personalschedulemanagementapp.ui.history;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,17 +12,17 @@ import androidx.fragment.app.Fragment;
 
 import com.example.personalschedulemanagementapp.ScheduleActivity;
 import com.example.personalschedulemanagementapp.dao.ScheduleDAO;
-import com.example.personalschedulemanagementapp.databinding.FragmentHomeBinding;
+import com.example.personalschedulemanagementapp.databinding.FragmentHistoryBinding;
 import com.example.personalschedulemanagementapp.entity.Schedule;
 import com.example.personalschedulemanagementapp.entity.Status;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.personalschedulemanagementapp.ui.home.ScheduleAdapter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HomeFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
+    private FragmentHistoryBinding binding;
     private ListView listViewSchedules;
     private ScheduleAdapter scheduleAdapter;
     private List<Schedule> schedules;
@@ -31,7 +31,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentHistoryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         listViewSchedules = binding.listViewSchedules;
@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
         scheduleDAO = new ScheduleDAO(binding.getRoot().getContext());
         schedules = scheduleDAO.getAllSchedules(binding.getRoot().getContext());
         schedules = schedules.stream().filter(
-                schedule -> schedule.getStatus().equals(Status.WAITING.name()))
+                        schedule -> schedule.getStatus().equals(Status.NOTIFIED.name()))
                 .collect(Collectors.toList());
         schedules.sort((a, b) -> Long.compare(b.getTime().getTimeInMillis(), a.getTime().getTimeInMillis()));
 
@@ -60,13 +60,6 @@ public class HomeFragment extends Fragment {
         });
 
         listViewSchedules.setAdapter(scheduleAdapter);
-
-        final FloatingActionButton addSchedule = binding.btnAddSchedule;
-        addSchedule.setOnClickListener(view -> {
-            Intent intent = new Intent(binding.getRoot().getContext(), ScheduleActivity.class);
-            startActivity(intent);
-        });
-
         return root;
     }
 

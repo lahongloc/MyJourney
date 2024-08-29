@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.personalschedulemanagementapp.R;
 import com.example.personalschedulemanagementapp.entity.Schedule;
+import com.example.personalschedulemanagementapp.entity.Status;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
@@ -70,11 +71,18 @@ public class ScheduleAdapter extends BaseAdapter {
             TextView titleTextView = convertView.findViewById(R.id.tvScheduleTitle);
             TextView descriptionTextView = convertView.findViewById(R.id.tvScheduleDescription);
             TextView timeTextView = convertView.findViewById(R.id.tvScheduleTime);
+            TextView statusTextView = convertView.findViewById(R.id.tvScheduleStatus);
             TextView categoryTextView = convertView.findViewById(R.id.tvScheduleCategory);
             Button deleteButton = convertView.findViewById(R.id.btnScheduleDelete);
 
             titleTextView.setText(schedule.getTitle());
-            descriptionTextView.setText(schedule.getDescription());
+
+            if (!schedule.getDescription().trim().isEmpty()) {
+                descriptionTextView.setText(schedule.getDescription());
+            } else {
+                descriptionTextView.setText("Description: No Description");
+            }
+
             String timeFormat = DATE_FORMAT.format(schedule.getTime().getTime());
             timeTextView.setText("Time: " + timeFormat);
             if (schedule.getCategory() != null) {
@@ -82,6 +90,13 @@ public class ScheduleAdapter extends BaseAdapter {
             } else {
                 categoryTextView.setText("Category: No Category");
             }
+
+            if (schedule.getStatus().equals(Status.WAITING.name()))
+                statusTextView.setText("Status: Chờ thông báo");
+            else if (schedule.getStatus().equals(Status.NOTIFIED.name()))
+                statusTextView.setText("Status: Đã thông báo");
+            else
+                statusTextView.setText("Status: No status");
 
             // Thiết lập sự kiện nhấn cho từng item
             convertView.setOnClickListener(v -> {

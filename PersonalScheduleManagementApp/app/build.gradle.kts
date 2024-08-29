@@ -74,5 +74,6 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-    implementation("com.google.android.material:material:1.9.0");
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

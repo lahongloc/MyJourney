@@ -6,7 +6,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.personalschedulemanagementapp.dao.SoundDAO;
+import com.example.personalschedulemanagementapp.dao.UserDAO;
+import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.entity.Sound;
+import com.example.personalschedulemanagementapp.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +35,13 @@ public class MainActivity extends AppCompatActivity {
                 soundDAO.insertOrUpdateSound(sound);
             }
         });
+
+        UserDAO userDAO = new UserDAO(this);
+        User admin = new User();
+        admin.setFullName("Administrator");
+        admin.setUsername("admin");
+        admin.setPassword("admin");
+        admin.setRole(Role.ADMIN.name());
+        long success = userDAO.insertUser(admin);
     }
 }

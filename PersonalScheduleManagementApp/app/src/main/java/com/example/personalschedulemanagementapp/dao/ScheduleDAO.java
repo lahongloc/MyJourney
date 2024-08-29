@@ -8,10 +8,15 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.personalschedulemanagementapp.data.DatabaseHelper;
 import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.Schedule;
+import com.example.personalschedulemanagementapp.entity.Status;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class ScheduleDAO {
     private SQLiteDatabase database;
@@ -22,11 +27,111 @@ public class ScheduleDAO {
         database = dbHelper.getWritableDatabase();
     }
 
+    public Map<String, Integer> getScheduleCountByCategory() {
+        Map<String, Integer> categoryCountMap = new HashMap<>();
+
+        String query = "SELECT Category.name AS category, COUNT(*) AS count " +
+                "FROM " + DatabaseHelper.TABLE_SCHEDULE + " AS Schedule " +
+                "JOIN " + DatabaseHelper.TABLE_CATEGORY + " AS Category " +
+                "ON Schedule.categoryId = Category.id " +
+                "GROUP BY Category.name";
+
+        Cursor cursor = database.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
+            int count = cursor.getInt(cursor.getColumnIndexOrThrow("count"));
+            categoryCountMap.put(category, count);
+        }
+
+        cursor.close();
+        return categoryCountMap;
+    }
+
+    public Calendar getDateFromInteger(long timeInMillis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
+        return calendar;
+    }
+
+    public long getIntegerFromDate(Calendar calendar) {
+        return calendar.getTimeInMillis();
+    }
+
+    public Map<String, Integer> getScheduleCountByDateRange(Calendar startDate, Calendar endDate) {
+        Map<String, Integer> countMap = new HashMap<>();
+
+        long startTimeMillis = startDate.getTimeInMillis();
+        long endTimeMillis = endDate.getTimeInMillis();
+
+        String query = "SELECT time FROM " + DatabaseHelper.TABLE_SCHEDULE
+                + " WHERE time BETWEEN ? AND ?";
+
+        Cursor cursor = database.rawQuery(query, new String[]{String.valueOf(startTimeMillis), String.valueOf(endTimeMillis)});
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                long time = cursor.getLong(cursor.getColumnIndexOrThrow("time"));
+                // Chuyển đổi lại thời gian từ mili giây thành định dạng ngày tháng
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(time);
+                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.getTime());
+
+                // Đếm số lượng lịch trình cho từng ngày
+                countMap.put(date, countMap.getOrDefault(date, 0) + 1);
+            }
+            cursor.close();
+        }
+
+        return countMap;
+    }
+
+    public Map<String, Integer> getScheduleCountByHourOfDate(Calendar date) {
+        Map<String, Integer> countMap = new HashMap<>();
+
+        // Xác định khoảng thời gian bắt đầu và kết thúc của ngày
+        Calendar startOfDay = (Calendar) date.clone();
+        startOfDay.set(Calendar.HOUR_OF_DAY, 0);
+        startOfDay.set(Calendar.MINUTE, 0);
+        startOfDay.set(Calendar.SECOND, 0);
+        startOfDay.set(Calendar.MILLISECOND, 0);
+
+        Calendar endOfDay = (Calendar) date.clone();
+        endOfDay.set(Calendar.HOUR_OF_DAY, 23);
+        endOfDay.set(Calendar.MINUTE, 59);
+        endOfDay.set(Calendar.SECOND, 59);
+        endOfDay.set(Calendar.MILLISECOND, 999);
+
+        long startTimeMillis = startOfDay.getTimeInMillis();
+        long endTimeMillis = endOfDay.getTimeInMillis();
+
+        // Truy vấn SQL
+        String query = "SELECT strftime('%H:%M', time / 1000, 'unixepoch') AS hour, COUNT(*) AS count " +
+                "FROM " + DatabaseHelper.TABLE_SCHEDULE +
+                " WHERE time BETWEEN ? AND ?" +
+                " GROUP BY hour";
+
+        // Thực thi truy vấn
+        Cursor cursor = database.rawQuery(query, new String[]{String.valueOf(startTimeMillis), String.valueOf(endTimeMillis)});
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String hour = cursor.getString(cursor.getColumnIndexOrThrow("hour"));
+                int count = cursor.getInt(cursor.getColumnIndexOrThrow("count"));
+                countMap.put(hour, count);
+            }
+            cursor.close();
+        }
+
+        return countMap;
+    }
+
+
+
     // Insert a new schedule
-    public void insertOrUpdateSchedule(Schedule schedule) {
+    public long insertOrUpdateSchedule(Schedule schedule) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_SCHEDULE_CATEGORY_ID, schedule.getCategory().getId());
-//        values.put(DatabaseHelper.COLUMN_SCHEDULE_SOUND, sound);
         values.put(DatabaseHelper.COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(DatabaseHelper.COLUMN_SCHEDULE_DESCRIPTION, schedule.getDescription());
         values.put(DatabaseHelper.COLUMN_SCHEDULE_TIME, schedule.getTime().getTimeInMillis());
@@ -36,11 +141,12 @@ public class ScheduleDAO {
             String selection = DatabaseHelper.COLUMN_SCHEDULE_ID + " = ?";
             String[] selectionArgs = { String.valueOf(schedule.getId()) };
 
-            database.update(DatabaseHelper.TABLE_SCHEDULE, values, selection, selectionArgs);
+            return database.update(DatabaseHelper.TABLE_SCHEDULE, values, selection, selectionArgs);
         } else {
-            database.insert(DatabaseHelper.TABLE_SCHEDULE, null, values);
+            return database.insert(DatabaseHelper.TABLE_SCHEDULE, null, values);
         }
     }
+
 
     // Retrieve all schedules as List<Schedule>
     public List<Schedule> getAllSchedules(Context context) {
@@ -62,6 +168,22 @@ public class ScheduleDAO {
         }
 
         return schedules;
+    }
+
+    public String getScheduleTitleByTime(Calendar calendar) {
+        long timeInMillis = calendar.getTimeInMillis();
+        String[] columns = { DatabaseHelper.COLUMN_SCHEDULE_TITLE };
+        String selection = DatabaseHelper.COLUMN_SCHEDULE_TIME + " = ? AND " +
+                DatabaseHelper.COLUMN_SCHEDULE_STATUS + " = ?";
+        String[] selectionArgs = { String.valueOf(timeInMillis), Status.WAITING.name() };
+
+        try (Cursor cursor = database.query(DatabaseHelper.TABLE_SCHEDULE, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                return cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_TITLE));
+            }
+        }
+
+        return null; // Trả về null nếu không tìm thấy lịch trình phù hợp
     }
 
     // Retrieve schedules by categoryId as List<Schedule>

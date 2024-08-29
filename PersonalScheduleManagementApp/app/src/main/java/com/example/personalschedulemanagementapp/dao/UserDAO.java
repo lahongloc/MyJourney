@@ -50,6 +50,16 @@ public class UserDAO {
         return database.insert(DatabaseHelper.TABLE_USER, null, values);
     }
 
+    public long insertUser(User user) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_USER_USERNAME, user.getUsername());
+        values.put(DatabaseHelper.COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(DatabaseHelper.COLUMN_USER_FULLNAME, user.getFullName());
+        values.put(DatabaseHelper.COLUMN_USER_EMAIL, user.getEmail());
+        values.put(DatabaseHelper.COLUMN_USER_ROLE, user.getRole());
+        return database.insert(DatabaseHelper.TABLE_USER, null, values);
+    }
+
     public Cursor getAllUsers() {
         String[] columns = {
                 DatabaseHelper.COLUMN_USER_ID,

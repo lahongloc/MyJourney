@@ -53,6 +53,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         // set remind time
         List<RemindTime> remindTimes = new ArrayList<>();
+        remindTimes.add(new RemindTime("3 minutes", 3));
         remindTimes.add(new RemindTime("15 minutes", 15));
         remindTimes.add(new RemindTime("30 minutes", 30));
         remindTimes.add(new RemindTime("1 hours", 60));

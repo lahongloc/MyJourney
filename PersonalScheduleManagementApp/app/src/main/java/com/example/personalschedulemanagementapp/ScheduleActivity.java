@@ -15,6 +15,7 @@ import com.example.personalschedulemanagementapp.dao.CategoryDAO;
 import com.example.personalschedulemanagementapp.dao.ScheduleDAO;
 import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.Schedule;
+import com.example.personalschedulemanagementapp.entity.Status;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
@@ -56,7 +57,6 @@ public class ScheduleActivity extends AppCompatActivity {
             etScheduleDescription.setText(schedule.getDescription());
             addScheduleButton.setText("Update Schedule");
         }
-
 
         // Khởi tạo timeInput từ layout
         timeInput = findViewById(R.id.scheduleTimeInput);
@@ -119,19 +119,30 @@ public class ScheduleActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn category", Toast.LENGTH_SHORT).show();
                 return;
             }
+            ScheduleDAO scheduleDAO = new ScheduleDAO(this);
+            if (scheduleDAO.getScheduleTitleByTime(date) != null) {
+                Toast.makeText(this, "Lịch trình dã bị trùng với " + scheduleDAO.getScheduleTitleByTime(date), Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // Thiết lập các giá trị cho Schedule
             schedule.setTitle(scheduleTitle);
             schedule.setDescription(scheduleDescription);
             schedule.setTime(date);
+            schedule.setStatus(Status.WAITING.name());
 
             // Lưu schedule vào cơ sở dữ liệu
-            ScheduleDAO scheduleDAO = new ScheduleDAO(this);
-            scheduleDAO.insertOrUpdateSchedule(schedule);
-            if (scheduleId == -1)
+            int id = (int) scheduleDAO.insertOrUpdateSchedule(schedule);
+
+            if (scheduleId == -1) {
+                Schedule scheduleInserted = scheduleDAO.getScheduleById(id, this);
+                scheduleInserted.setAlarmForSchedule(this);
                 Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-            else
+            } else {
+                schedule.updateAlarms(this);
                 Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            }
+
 
             // Chuyển đến UserActivity
             Intent intent = new Intent(ScheduleActivity.this, UserActivity.class);
