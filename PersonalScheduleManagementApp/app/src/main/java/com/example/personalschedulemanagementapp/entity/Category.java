@@ -28,6 +28,14 @@ public class Category {
         this.sound = sound;
     }
 
+    public Category(String name, String description, int remindTime) {
+        this.name = name;
+        this.description = description;
+        this.remindTime = remindTime;
+    }
+
+
+
     public int getId() {
         return id;
     }

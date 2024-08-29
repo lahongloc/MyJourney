@@ -113,7 +113,7 @@ public class CategoryActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Sound selectedSound = (Sound) parentView.getSelectedItem();
                 SoundHelper soundHelper = new SoundHelper();
-                soundHelper.playNotificationSound(CategoryActivity.this, selectedSound.getSoundId());
+//                soundHelper.playNotificationSound(CategoryActivity.this, selectedSound.getSoundId());
                 category.setSound(selectedSound);
             }
 

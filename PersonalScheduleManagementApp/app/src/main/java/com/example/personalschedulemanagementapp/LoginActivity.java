@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                     } else if (user.getRole().equals(Role.USER.name())) {
                         Intent intent = new Intent(this, UserActivity.class);
+//                        Intent intent = new Intent(this, SoundListActivity.class);
                         startActivity(intent);
                     }
                 }

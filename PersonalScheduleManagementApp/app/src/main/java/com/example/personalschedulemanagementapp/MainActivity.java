@@ -5,8 +5,10 @@ import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.personalschedulemanagementapp.dao.CategoryDAO;
 import com.example.personalschedulemanagementapp.dao.SoundDAO;
 import com.example.personalschedulemanagementapp.dao.UserDAO;
+import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.entity.Sound;
 import com.example.personalschedulemanagementapp.entity.User;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SoundDAO soundDAO = new SoundDAO(this);
+        CategoryDAO categoryDAO = new CategoryDAO(this);
 
         List<Sound> sounds = new ArrayList<>();
         sounds.add(new Sound("Sci-fi Confirmation", R.raw.mixkit_sci_fi_confirmation_914));
@@ -35,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
                 soundDAO.insertOrUpdateSound(sound);
             }
         });
+
+//        List<Category> categories = new ArrayList<>();
+//        categories.add(new Category("The thao", "loai the thao", 30));
+//        categories.add(new Category("Cong viec", "loai cong viec", 10));
+//        categories.forEach(category -> {
+//            if(Objects.isNull(categoryDAO.getCategoryById(category.getId()))) {
+//                categoryDAO.insertOrUpdateCategory(category);
+//            }
+//        });
 
         UserDAO userDAO = new UserDAO(this);
         User admin = new User();

@@ -1,6 +1,7 @@
 package com.example.personalschedulemanagementapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -56,6 +57,8 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle add user logic here, for example start a new activity
+                Intent intent = new Intent(UserListActivity.this, AddUserActivity.class);
+                UserListActivity.this.startActivity(intent);
             }
         });
     }
