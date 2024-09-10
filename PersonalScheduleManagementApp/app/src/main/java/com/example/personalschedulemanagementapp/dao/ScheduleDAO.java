@@ -271,7 +271,7 @@ public class ScheduleDAO {
         Calendar time = Calendar.getInstance();
         time.setTimeInMillis(timeMillis);
 
-        Category category = new CategoryDAO(context).getCategoryById(categoryId);
+        Category category = new CategoryDAO(context).getCategoryById(context, categoryId);
         User user = new UserDAO(context).getUserById(userId);
 
         return new Schedule(id, title, description, time, status, category, user);

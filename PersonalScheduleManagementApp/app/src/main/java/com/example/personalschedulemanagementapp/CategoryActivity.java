@@ -21,7 +21,6 @@ import com.example.personalschedulemanagementapp.entity.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +28,7 @@ import java.util.Objects;
 public class CategoryActivity extends AppCompatActivity {
     private TextInputEditText etCategoryName;
     private TextInputEditText etCategoryDescription;
-    Category category;
+    private Category category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,30 +41,37 @@ public class CategoryActivity extends AppCompatActivity {
         MaterialButton addCategoryButton = findViewById(R.id.addButton);
 
         int categoryId = getIntent().getIntExtra("CATEGORY_ID", -1);
+        CategoryDAO categoryDAO = new CategoryDAO(this);
+        SoundDAO soundDAO = new SoundDAO(this);
+
         if (categoryId == -1) {
             category = new Category();
             addCategoryButton.setText("Create Category");
         } else {
-            CategoryDAO categoryDAO = new CategoryDAO(this);
-            category = categoryDAO.getCategoryById(categoryId);
-            etCategoryName.setText(category.getName());
-            etCategoryDescription.setText(category.getDescription());
-            addCategoryButton.setText("Update Category");
+            category = categoryDAO.getCategoryById(this, categoryId);
+            if (category != null) {
+                etCategoryName.setText(category.getName());
+                etCategoryDescription.setText(category.getDescription());
+                addCategoryButton.setText("Update Category");
+            } else {
+                finish(); // Nếu không tìm thấy category, thoát activity
+                return;
+            }
         }
 
-        // set remind time
+        // Set remind time
         List<RemindTime> remindTimes = new ArrayList<>();
         remindTimes.add(new RemindTime("3 minutes", 3));
         remindTimes.add(new RemindTime("15 minutes", 15));
         remindTimes.add(new RemindTime("30 minutes", 30));
-        remindTimes.add(new RemindTime("1 hours", 60));
+        remindTimes.add(new RemindTime("1 hour", 60));
 
         Spinner remindTimeSpinner = findViewById(R.id.remindTimeSpinner);
         ArrayAdapter<RemindTime> remindTimeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, remindTimes);
         remindTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         remindTimeSpinner.setAdapter(remindTimeAdapter);
 
-        // Đặt giá trị đã chọn cho Spinner
+        // Set value for Spinner
         if (categoryId != -1) {
             for (int i = 0; i < remindTimes.size(); i++) {
                 if (remindTimes.get(i).getValue() == category.getRemindTime()) {
@@ -75,7 +81,6 @@ public class CategoryActivity extends AppCompatActivity {
             }
         }
 
-        // Đặt listener nếu cần
         remindTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -85,53 +90,47 @@ public class CategoryActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                RemindTime selectedRemindTime = (RemindTime) parentView.getSelectedItem();
-                category.setRemindTime(selectedRemindTime.getValue());
+                // Do nothing or set default reminder time
             }
         });
 
-        // select sound
-        SoundDAO soundDAO = new SoundDAO(this);
+        // Set sound
         List<Sound> sounds = soundDAO.getAllSounds();
-
         Spinner soundSpinner = findViewById(R.id.soundSpinner);
         ArrayAdapter<Sound> soundAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sounds);
         soundAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         soundSpinner.setAdapter(soundAdapter);
 
-        // Đặt giá trị đã chọn cho Spinner
-        if (categoryId != -1) {
+        // Set value for Spinner
+        if (categoryId != -1 && category.getSound() != null) {
             for (int i = 0; i < sounds.size(); i++) {
-                if (sounds.get(i).getSoundId() == category.getSound().getSoundId()) {
+                if (sounds.get(i).getUri().equals(category.getSound().getUri())) {
                     soundSpinner.setSelection(i);
                     break;
                 }
             }
         }
 
-        // Đặt listener nếu cần
         soundSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Sound selectedSound = (Sound) parentView.getSelectedItem();
                 SoundHelper soundHelper = new SoundHelper();
-                soundHelper.playNotificationSound(CategoryActivity.this, selectedSound.getSoundId());
+                soundHelper.playNotificationSound(CategoryActivity.this, selectedSound.getUri());
                 category.setSound(selectedSound);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // Xử lý khi không chọn mục nào
-                Sound selectedSound = (Sound) parentView.getSelectedItem();
-                category.setSound(selectedSound);
+                // Do nothing or set default sound
             }
         });
 
-        // xử lý nút add
+        // Handle add/update button click
         addCategoryButton.setOnClickListener(view -> {
             String categoryName = Objects.requireNonNull(etCategoryName.getText()).toString().trim();
             if (categoryName.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập tên", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -139,23 +138,25 @@ public class CategoryActivity extends AppCompatActivity {
             category.setName(categoryName);
             category.setDescription(categoryDescription);
 
-            // Lưu schedule vào cơ sở dữ liệu
-            CategoryDAO categoryDAO = new CategoryDAO(this);
+            // Save category to database
             categoryDAO.insertOrUpdateCategory(category);
 
-            if (categoryId == -1)
-                Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-
-            User user = UserManager.getInstance().getUser();
-            if (user.getRole().equals(Role.ADMIN.name())) {
-                Intent intent = new Intent(CategoryActivity.this, AdminActivity.class);
-                startActivity(intent);
+            if (categoryId == -1) {
+                Toast.makeText(this, "Category added successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(CategoryActivity.this, UserActivity.class);
-                startActivity(intent);
+                Toast.makeText(this, "Category updated successfully", Toast.LENGTH_SHORT).show();
             }
+
+            // Navigate based on role
+            User user = UserManager.getInstance().getUser();
+            Intent intent;
+            if (Role.ADMIN.name().equals(user.getRole())) {
+                intent = new Intent(CategoryActivity.this, AdminActivity.class);
+            } else {
+                intent = new Intent(CategoryActivity.this, UserActivity.class);
+            }
+            startActivity(intent);
+            finish(); // Finish activity to prevent returning to this screen
         });
     }
 }

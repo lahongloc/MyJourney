@@ -72,39 +72,11 @@ public class SoundFragment extends Fragment {
             Uri soundUri = data.getData();
             if (soundUri != null) {
                 String soundName = getFileName(soundUri);
-                int soundId = saveSoundToStorage(soundUri);
-                if (soundId != 0) {
-                    Sound sound = new Sound(soundName, soundId);
-                    soundDAO.insertOrUpdateSound(sound);
-                    updateSoundList();
-                }
+                Sound sound = new Sound(soundName, soundUri);
+                soundDAO.insertOrUpdateSound(sound);
+                updateSoundList();
             }
         }
-    }
-
-    private int saveSoundToStorage(Uri soundUri) {
-        int fileId = 0;
-        try {
-            InputStream inputStream = requireContext().getContentResolver().openInputStream(soundUri);
-            if (inputStream != null) {
-                File soundFile = new File(requireContext().getFilesDir(), getFileName(soundUri));
-                FileOutputStream outputStream = new FileOutputStream(soundFile);
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    outputStream.write(buffer, 0, length);
-                }
-
-                outputStream.close();
-                inputStream.close();
-
-                fileId = soundFile.hashCode();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileId;
     }
 
     private String getFileName(Uri uri) {

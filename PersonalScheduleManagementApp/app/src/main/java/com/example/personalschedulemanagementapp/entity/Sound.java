@@ -1,27 +1,29 @@
 package com.example.personalschedulemanagementapp.entity;
 
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 
 public class Sound {
     private int id;
     private String name;
-    private int soundId;
+    private Uri uri;
 
 
     public Sound() {
     }
 
-    public Sound(String name, int soundId) {
+    public Sound(String name, Uri uri) {
         this.name = name;
-        this.soundId = soundId;
+        this.uri = uri;
     }
 
-    public Sound(int id, String name, int soundId) {
+    public Sound(int id, String name, Uri uri) {
         this.id = id;
         this.name = name;
-        this.soundId = soundId;
+        this.uri = uri;
     }
 
     public int getId() {
@@ -40,12 +42,12 @@ public class Sound {
         this.name = name;
     }
 
-    public int getSoundId() {
-        return soundId;
+    public Uri getUri() {
+        return uri;
     }
 
-    public void setSoundId(int soundId) {
-        this.soundId = soundId;
+    public void setUri(Uri uri) {
+        this.uri = uri;
     }
 
     @NonNull

@@ -26,7 +26,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Sound Table Columns
     public static final String COLUMN_SOUND_ID = "id";
     public static final String COLUMN_SOUND_NAME = "name";
-    public static final String COLUMN_SOUND_SOUNDID = "soundId";
+//    public static final String COLUMN_SOUND_SOUNDID = "soundId";
+    public static final String COLUMN_SOUND_URI = "uri";
 
     // Category Table Columns
     public static final String COLUMN_CATEGORY_ID = "id";
@@ -59,7 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_SOUND + " (" +
                     COLUMN_SOUND_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_SOUND_NAME + " TEXT NOT NULL, " +
-                    COLUMN_SOUND_SOUNDID + " INTERGER NOT NULL);";
+                    COLUMN_SOUND_URI + " TEXT NOT NULL);";
+//                    COLUMN_SOUND_SOUNDID + " INTERGER NOT NULL);";
 
     // Create Category Table SQL
     private static final String CREATE_CATEGORY_TABLE =

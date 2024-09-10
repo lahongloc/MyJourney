@@ -36,7 +36,7 @@ public class CategoriesFragment extends Fragment {
         listViewCategories = binding.listViewCategories;
 
         categoryDAO = new CategoryDAO(binding.getRoot().getContext());
-        categories = categoryDAO.getAllCategories();
+        categories = categoryDAO.getAllCategories(binding.getRoot().getContext());
 
         categoryAdapter = new CategoryAdapter(requireContext(), categories, category -> {
             // Xử lý sự kiện nhấn vào category tại đây

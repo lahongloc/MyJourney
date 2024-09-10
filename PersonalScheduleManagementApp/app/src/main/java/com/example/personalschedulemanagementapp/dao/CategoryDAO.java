@@ -24,7 +24,7 @@ public class CategoryDAO {
     // Insert a new category
     public void insertOrUpdateCategory(Category category) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_CATEGORY_SOUND_ID, category.getSound().getSoundId());
+        values.put(DatabaseHelper.COLUMN_CATEGORY_SOUND_ID, category.getSound().getId());
         values.put(DatabaseHelper.COLUMN_CATEGORY_NAME, category.getName());
         values.put(DatabaseHelper.COLUMN_CATEGORY_DESCRIPTION, category.getDescription());
         values.put(DatabaseHelper.COLUMN_CATEGORY_REMIND_TIME, category.getRemindTime());
@@ -47,7 +47,7 @@ public class CategoryDAO {
     }
 
     // Retrieve all categories as List<Category>
-    public List<Category> getAllCategories() {
+    public List<Category> getAllCategories(Context context) {
         List<Category> categories = new ArrayList<>();
         String[] columns = {
                 DatabaseHelper.COLUMN_CATEGORY_ID,
@@ -59,7 +59,7 @@ public class CategoryDAO {
 
         try (Cursor cursor = database.query(DatabaseHelper.TABLE_CATEGORY, columns, null, null, null, null, null)) {
             while (cursor.moveToNext()) {
-                Category category = cursorToCategory(cursor);
+                Category category = cursorToCategory(context, cursor);
                 categories.add(category);
             }
         }
@@ -68,7 +68,7 @@ public class CategoryDAO {
     }
 
     // Retrieve a specific category by ID
-    public Category getCategoryById(int id) {
+    public Category getCategoryById(Context context, int id) {
         String[] columns = {
                 DatabaseHelper.COLUMN_CATEGORY_ID,
                 DatabaseHelper.COLUMN_CATEGORY_SOUND_ID,
@@ -82,7 +82,7 @@ public class CategoryDAO {
 
         try (Cursor cursor = database.query(DatabaseHelper.TABLE_CATEGORY, columns, selection, selectionArgs, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
-                return cursorToCategory(cursor);
+                return cursorToCategory(context, cursor);
             }
         }
 
@@ -90,59 +90,17 @@ public class CategoryDAO {
     }
 
     // Convert Cursor to Category
-    private Category cursorToCategory(Cursor cursor) {
+    private Category cursorToCategory(Context context, Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID));
         int soundId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_SOUND_ID));
         String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_NAME));
         String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_DESCRIPTION));
         int remindTime = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_REMIND_TIME));
 
-        Sound sound = new Sound("sound", soundId); // Assuming Sound has a constructor that takes id and name
+        SoundDAO soundDAO = new SoundDAO(context);
+        Sound sound = soundDAO.getSoundById(soundId);
 
         return new Category(id, name, description, remindTime, sound);
-    }
-
-    // Retrieve categories by notificationId as List<Category>
-    public List<Category> getCategoriesByNotificationId(int notificationId) {
-        List<Category> categories = new ArrayList<>();
-        String[] columns = {
-                DatabaseHelper.COLUMN_CATEGORY_ID,
-                DatabaseHelper.COLUMN_CATEGORY_NAME,
-                DatabaseHelper.COLUMN_CATEGORY_DESCRIPTION,
-                DatabaseHelper.COLUMN_CATEGORY_REMIND_TIME
-        };
-
-        try (Cursor cursor = database.query(DatabaseHelper.TABLE_CATEGORY, columns, DatabaseHelper.COLUMN_CATEGORY_SOUND_ID + " = ?", new String[]{String.valueOf(notificationId)}, null, null, null)) {
-            while (cursor.moveToNext()) {
-                Category category = cursorToCategory(cursor);
-                categories.add(category);
-            }
-        }
-
-        return categories;
-    }
-
-    // Retrieve all categories with notifications as List<Category>
-    public List<Category> getAllCategoriesWithNotifications() {
-        List<Category> categories = new ArrayList<>();
-        String query = "SELECT " +
-                "c." + DatabaseHelper.COLUMN_CATEGORY_ID + ", " +
-                "c." + DatabaseHelper.COLUMN_CATEGORY_NAME + ", " +
-                "c." + DatabaseHelper.COLUMN_CATEGORY_DESCRIPTION + ", " +
-                "c." + DatabaseHelper.COLUMN_CATEGORY_REMIND_TIME + ", " +
-                "n." + DatabaseHelper.COLUMN_SOUND_SOUNDID +
-                " FROM " + DatabaseHelper.TABLE_CATEGORY + " c" +
-                " LEFT JOIN " + DatabaseHelper.TABLE_SOUND + " n" +
-                " ON c." + DatabaseHelper.COLUMN_CATEGORY_SOUND_ID + " = n." + DatabaseHelper.COLUMN_SOUND_ID;
-
-        try (Cursor cursor = database.rawQuery(query, null)) {
-            while (cursor.moveToNext()) {
-                Category category = cursorToCategory(cursor);
-                categories.add(category);
-            }
-        }
-
-        return categories;
     }
 
     public void close() {

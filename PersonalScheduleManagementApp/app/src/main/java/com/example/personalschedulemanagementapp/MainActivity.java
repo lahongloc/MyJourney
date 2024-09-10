@@ -1,6 +1,6 @@
 package com.example.personalschedulemanagementapp;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.personalschedulemanagementapp.dao.CategoryDAO;
 import com.example.personalschedulemanagementapp.dao.SoundDAO;
 import com.example.personalschedulemanagementapp.dao.UserDAO;
-import com.example.personalschedulemanagementapp.data.DatabaseHelper;
-import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.entity.Sound;
 import com.example.personalschedulemanagementapp.entity.User;
@@ -31,15 +29,16 @@ public class MainActivity extends AppCompatActivity {
         CategoryDAO categoryDAO = new CategoryDAO(this);
 
         List<Sound> sounds = new ArrayList<>();
-        sounds.add(new Sound("Sci-fi Confirmation", R.raw.mixkit_sci_fi_confirmation_914));
-        sounds.add(new Sound("DoorBell Tone", R.raw.mixkit_doorbell_tone_2864));
-        sounds.add(new Sound("Software Interface Remove", R.raw.mixkit_software_interface_remove_2576));
+        sounds.add(new Sound("Sci-fi Confirmation", Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mixkit_sci_fi_confirmation_914)));
+        sounds.add(new Sound("DoorBell Tone", Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mixkit_doorbell_tone_2864)));
+        sounds.add(new Sound("Software Interface Remove", Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mixkit_software_interface_remove_2576)));
 
         sounds.forEach(sound -> {
-            if (Objects.isNull(soundDAO.getSoundBySoundId(sound.getSoundId()))) {
+            if (Objects.isNull(soundDAO.getSoundByUri(sound.getUri()))) {
                 soundDAO.insertOrUpdateSound(sound);
             }
         });
+
 
 //        List<Category> categories = new ArrayList<>();
 //        categories.add(new Category("The thao", "loai the thao", 30));

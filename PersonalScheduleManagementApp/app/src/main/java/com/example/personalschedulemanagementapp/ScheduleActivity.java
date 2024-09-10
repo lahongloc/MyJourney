@@ -1,6 +1,7 @@
 package com.example.personalschedulemanagementapp;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -81,7 +82,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         // Khởi tạo list category
         CategoryDAO categoryDAO = new CategoryDAO(this);
-        List<Category> categories = categoryDAO.getAllCategories();
+        List<Category> categories = categoryDAO.getAllCategories(this);
 
         Spinner scheduleCategorySpinner = findViewById(R.id.scheduleCategorySpinner);
         ArrayAdapter<Category> scheduleCategoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
@@ -194,4 +195,20 @@ public class ScheduleActivity extends AppCompatActivity {
 
         timePicker.show(getSupportFragmentManager(), "TIME_PICKER");
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == NotificationPermissionHelper.REQUEST_CODE_POST_NOTIFICATIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Quyền đã được cấp
+                Toast.makeText(this, "Quyền thông báo đã được cấp", Toast.LENGTH_SHORT).show();
+            } else {
+                // Quyền bị từ chối
+                Toast.makeText(this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

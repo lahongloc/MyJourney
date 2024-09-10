@@ -9,17 +9,6 @@ import java.net.URL;
 public class SoundHelper {
     private MediaPlayer mediaPlayer;
 
-    public void playNotificationSound(Context context, int soundId) {
-        // Giải phóng MediaPlayer nếu đã có âm thanh đang phát
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-        }
-
-        // Tạo mới MediaPlayer với file âm thanh
-        mediaPlayer = MediaPlayer.create(context, soundId);
-        mediaPlayer.start();
-    }
-
     public void playNotificationSound(Context context, Uri uri) {
         // Giải phóng MediaPlayer nếu đã có âm thanh đang phát
         if (mediaPlayer != null) {

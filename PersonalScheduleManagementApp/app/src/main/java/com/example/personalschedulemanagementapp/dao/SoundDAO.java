@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.example.personalschedulemanagementapp.data.DatabaseHelper;
 import com.example.personalschedulemanagementapp.entity.Sound;
@@ -24,13 +25,15 @@ public class SoundDAO {
     public void insertOrUpdateSound(Sound sound) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_SOUND_NAME, sound.getName());
-        values.put(DatabaseHelper.COLUMN_SOUND_SOUNDID, sound.getSoundId());
+        values.put(DatabaseHelper.COLUMN_SOUND_URI, sound.getUri().toString());
 
         if (sound.getId() > 0) {
+            // Update existing sound
             String selection = DatabaseHelper.COLUMN_SOUND_ID + " = ?";
             String[] selectionArgs = { String.valueOf(sound.getId()) };
             database.update(DatabaseHelper.TABLE_SOUND, values, selection, selectionArgs);
         } else {
+            // Insert new sound
             database.insert(DatabaseHelper.TABLE_SOUND, null, values);
         }
     }
@@ -40,7 +43,7 @@ public class SoundDAO {
         String[] columns = {
                 DatabaseHelper.COLUMN_SOUND_ID,
                 DatabaseHelper.COLUMN_SOUND_NAME,
-                DatabaseHelper.COLUMN_SOUND_SOUNDID
+                DatabaseHelper.COLUMN_SOUND_URI
         };
         String selection = DatabaseHelper.COLUMN_SOUND_ID + " = ?";
         String[] selectionArgs = { String.valueOf(id) };
@@ -55,14 +58,15 @@ public class SoundDAO {
         return sound;
     }
 
-    public Sound getSoundBySoundId(int soundId) {
+    // Retrieve a sound by URI
+    public Sound getSoundByUri(Uri uri) {
         String[] columns = {
                 DatabaseHelper.COLUMN_SOUND_ID,
                 DatabaseHelper.COLUMN_SOUND_NAME,
-                DatabaseHelper.COLUMN_SOUND_SOUNDID
+                DatabaseHelper.COLUMN_SOUND_URI
         };
-        String selection = DatabaseHelper.COLUMN_SOUND_SOUNDID + " = ?";
-        String[] selectionArgs = { String.valueOf(soundId) };
+        String selection = DatabaseHelper.COLUMN_SOUND_URI + " = ?";
+        String[] selectionArgs = { uri.toString() };
 
         Cursor cursor = database.query(DatabaseHelper.TABLE_SOUND, columns, selection, selectionArgs, null, null, null);
 
@@ -81,7 +85,7 @@ public class SoundDAO {
         String[] columns = {
                 DatabaseHelper.COLUMN_SOUND_ID,
                 DatabaseHelper.COLUMN_SOUND_NAME,
-                DatabaseHelper.COLUMN_SOUND_SOUNDID
+                DatabaseHelper.COLUMN_SOUND_URI
         };
 
         Cursor cursor = database.query(DatabaseHelper.TABLE_SOUND, columns, null, null, null, null, null);
@@ -97,12 +101,12 @@ public class SoundDAO {
         return sounds;
     }
 
-    // Common method to convert cursor to Sound object
+    // Convert cursor to Sound object
     private Sound cursorToSound(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SOUND_ID));
         String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SOUND_NAME));
-        int soundId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SOUND_SOUNDID));
-        return new Sound(id, name, soundId);
+        String uriString = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SOUND_URI));
+        return new Sound(id, name, Uri.parse(uriString)); // Chuyển chuỗi thành Uri
     }
 
     // Delete a sound by ID

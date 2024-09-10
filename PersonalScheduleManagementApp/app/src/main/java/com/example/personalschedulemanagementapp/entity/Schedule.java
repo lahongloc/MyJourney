@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import com.example.personalschedulemanagementapp.AlarmReceiver;
 
 import java.util.Calendar;
@@ -36,14 +38,15 @@ public class Schedule {
         Intent intent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
         intent.putExtra("SCHEDULE_ID", this.id);
 
-        long intervalMillis = 5 * 1000;
-        long firstAlarmTime = this.getTime().getTimeInMillis() - ((long) getCategory().getRemindTime() * 60 * 1000);
-        for (int i = 0; i < 5; i++) {
-            long alarmTime = firstAlarmTime + (i * intervalMillis);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), this.id + i, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        long reminderTime = this.getTime().getTimeInMillis() - ((long) getCategory().getRemindTime() * 60 * 1000);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(),
+                this.id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
-        }
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent);
     }
 
     public void updateAlarms(Context context) {
@@ -56,12 +59,49 @@ public class Schedule {
         Intent intent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
         intent.putExtra("SCHEDULE_ID", this.id);
 
-        for (int i = 0; i < 5; i++) {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), this.id + i, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-            alarmManager.cancel(pendingIntent);
-        }
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(),
+                this.id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        alarmManager.cancel(pendingIntent);
     }
 
+//    public void setAlarmForSchedule(Context context) {
+//        AlarmManager alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+//
+//        Intent intent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+//        intent.putExtra("SCHEDULE_ID", this.id);
+//
+//        long intervalMillis = 5 * 1000; // Interval between each alarm
+//        long firstAlarmTime = this.getTime().getTimeInMillis() - ((long) getCategory().getRemindTime() * 60 * 1000);
+//        for (int i = 0; i < 5; i++) {
+//            long alarmTime = firstAlarmTime + (i * intervalMillis);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), this.id + i, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//
+//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
+//        }
+//    }
+//
+//    public void cancelAlarmsForSchedule(Context context) {
+//        AlarmManager alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+//        intent.putExtra("SCHEDULE_ID", this.id);
+//
+//        for (int i = 0; i < 5; i++) {
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                    context.getApplicationContext(),
+//                    this.id + i,
+//                    intent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+//            );
+//            alarmManager.cancel(pendingIntent);
+//        }
+//    }
+
+    // Các phương thức getter và setter
     public int getId() {
         return id;
     }
@@ -116,5 +156,11 @@ public class Schedule {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.title;
     }
 }
