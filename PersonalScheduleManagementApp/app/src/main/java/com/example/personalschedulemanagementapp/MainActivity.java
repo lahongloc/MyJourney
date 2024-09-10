@@ -39,16 +39,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-//        List<Category> categories = new ArrayList<>();
-//        categories.add(new Category("The thao", "loai the thao", 30));
-//        categories.add(new Category("Cong viec", "loai cong viec", 10));
-//        categories.forEach(category -> {
-//            if(Objects.isNull(categoryDAO.getCategoryById(category.getId()))) {
-//                categoryDAO.insertOrUpdateCategory(category);
-//            }
-//        });
-
         UserDAO userDAO = new UserDAO(this);
         User admin = new User();
         admin.setFullName("Administrator");

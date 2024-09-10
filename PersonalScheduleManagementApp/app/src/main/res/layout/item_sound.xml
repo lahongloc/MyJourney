@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@drawable/item_background">
+    android:gravity="center_vertical"
+    android:background="@drawable/item_background"
+    android:layout_marginBottom="15dp">
 
+    <!-- TextView for the username -->
     <TextView
         android:id="@+id/textViewName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp" />
+
+    <!-- Edit Button -->
+    <ImageButton
+        android:id="@+id/buttonUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/buttonDelete"
-        android:layout_alignParentStart="true"
-        android:textSize="18sp"
-        android:ellipsize="end"
-        android:maxLines="1"/>
+        android:backgroundTint="#CE7CC2E9"
+        android:textColor="#093B78"
+        android:textSize="20sp"
+        android:src="@drawable/ic_edit_black_24dp"/>
 
+    <!-- Delete Button -->
     <ImageButton
         android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
         android:backgroundTint="#92CA4545"
-        android:src="@drawable/ic_delete_black_24dp"
-        android:contentDescription="Delete Sound" />
+        android:textSize="20sp"
+        android:src="@drawable/ic_delete_black_24dp"/>
 
-</RelativeLayout>
+</LinearLayout>

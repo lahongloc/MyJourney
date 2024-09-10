@@ -1,7 +1,10 @@
 package com.example.personalschedulemanagementapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.personalschedulemanagementapp.entity.Role;
+import com.example.personalschedulemanagementapp.entity.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +27,12 @@ public class AdminActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        User user = UserManager.getInstance().getUser();
+        if (user == null || !user.getRole().equals(Role.ADMIN.name())) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);

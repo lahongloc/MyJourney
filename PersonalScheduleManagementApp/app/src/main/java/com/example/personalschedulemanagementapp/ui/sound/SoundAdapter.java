@@ -15,15 +15,17 @@ import java.util.List;
 
 public class SoundAdapter extends ArrayAdapter<Sound> {
 
-    private OnSoundClickListener listener;
+    private OnSoundClickListener deleteListener;
+    private OnSoundClickListener updateListener;
 
     public interface OnSoundClickListener {
-        void onDeleteClick(Sound sound);
+        void onClick(Sound sound);
     }
 
-    public SoundAdapter(Context context, List<Sound> sounds, OnSoundClickListener listener) {
+    public SoundAdapter(Context context, List<Sound> sounds, OnSoundClickListener deleteListener, OnSoundClickListener updateListener) {
         super(context, 0, sounds);
-        this.listener = listener;
+        this.deleteListener = deleteListener;
+        this.updateListener = updateListener;
     }
 
     @Override
@@ -35,11 +37,16 @@ public class SoundAdapter extends ArrayAdapter<Sound> {
         Sound sound = getItem(position);
         TextView textViewName = convertView.findViewById(R.id.textViewName);
         ImageButton buttonDelete = convertView.findViewById(R.id.buttonDelete);
+        ImageButton buttonUpdate = convertView.findViewById(R.id.buttonUpdate);
 
         textViewName.setText(sound.getName());
-        buttonDelete.setOnClickListener(v -> listener.onDeleteClick(sound));
+
+        // Xử lý sự kiện xóa âm thanh
+        buttonDelete.setOnClickListener(v -> deleteListener.onClick(sound));
+
+        // Xử lý sự kiện cập nhật âm thanh
+        buttonUpdate.setOnClickListener(v -> updateListener.onClick(sound));
 
         return convertView;
     }
 }
-
