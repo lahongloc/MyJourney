@@ -15,7 +15,7 @@ import com.example.personalschedulemanagementapp.dao.ScheduleDAO;
 import com.example.personalschedulemanagementapp.databinding.FragmentHistoryBinding;
 import com.example.personalschedulemanagementapp.entity.Schedule;
 import com.example.personalschedulemanagementapp.entity.Status;
-import com.example.personalschedulemanagementapp.ui.home.ScheduleAdapter;
+import com.example.personalschedulemanagementapp.ui.schedule.ScheduleAdapter;
 
 import java.util.List;
 import java.util.stream.Collectors;

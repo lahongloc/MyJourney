@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.personalschedulemanagementapp.R;
@@ -64,7 +64,7 @@ public class CategoryAdapter extends BaseAdapter {
         TextView descriptionTextView = convertView.findViewById(R.id.tvDescription);
         TextView remindTimeTextView = convertView.findViewById(R.id.tvRemindTime);
         TextView soundTextView = convertView.findViewById(R.id.tvSoundId);
-        Button deleteButton = convertView.findViewById(R.id.btnDelete);
+        ImageButton deleteButton = convertView.findViewById(R.id.btnDelete);
 
         if (category != null) {
             nameTextView.setText(category.getName());

@@ -12,29 +12,31 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.personalschedulemanagementapp.databinding.ActivityUserBinding;
+import com.example.personalschedulemanagementapp.databinding.ActivityAdminBinding;
 
-public class UserActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
 
-    private ActivityUserBinding binding;
+    private ActivityAdminBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = ActivityUserBinding.inflate(getLayoutInflater());
+        binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
 
-        BottomNavigationView navView = binding.navView;
-
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_schedule,  R.id.navigation_categories, R.id.navigation_statistic, R.id.navigation_history)
+                R.id.navigation_user, R.id.navigation_sound, R.id.navigation_categories, R.id.navigation_schedule_manage)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_user);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_admin);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        NavigationUI.setupWithNavController(binding.navView, navController);
     }
+
 }

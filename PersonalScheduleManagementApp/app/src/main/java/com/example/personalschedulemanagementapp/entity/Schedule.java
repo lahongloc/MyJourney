@@ -16,16 +16,18 @@ public class Schedule {
     private Calendar time;
     private String status;
     private Category category;
+    private User user;
 
     public Schedule() {}
 
-    public Schedule(int id, String title, String description, Calendar time, String status, Category category) {
+    public Schedule(int id, String title, String description, Calendar time, String status, Category category, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.time = time;
         this.status = status;
         this.category = category;
+        this.user = user;
     }
 
     public void setAlarmForSchedule(Context context) {
@@ -106,5 +108,13 @@ public class Schedule {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

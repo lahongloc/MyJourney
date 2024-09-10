@@ -13,9 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.personalschedulemanagementapp.dao.CategoryDAO;
 import com.example.personalschedulemanagementapp.dao.ScheduleDAO;
+import com.example.personalschedulemanagementapp.dao.UserDAO;
 import com.example.personalschedulemanagementapp.entity.Category;
+import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.entity.Schedule;
 import com.example.personalschedulemanagementapp.entity.Status;
+import com.example.personalschedulemanagementapp.entity.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
@@ -50,6 +53,11 @@ public class ScheduleActivity extends AppCompatActivity {
         if (scheduleId == -1) {
             schedule = new Schedule();
             addScheduleButton.setText("Create Schedule");
+
+            if (UserManager.getInstance().getUserId() != -1) {
+                schedule.setUser(UserManager.getInstance().getUser());
+            }
+
         } else {
             ScheduleDAO scheduleDAO = new ScheduleDAO(this);
             schedule = scheduleDAO.getScheduleById(scheduleId, this);
@@ -126,6 +134,7 @@ public class ScheduleActivity extends AppCompatActivity {
             }
 
             // Thiết lập các giá trị cho Schedule
+
             schedule.setTitle(scheduleTitle);
             schedule.setDescription(scheduleDescription);
             schedule.setTime(date);
@@ -143,10 +152,14 @@ public class ScheduleActivity extends AppCompatActivity {
                 Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
             }
 
-
-            // Chuyển đến UserActivity
-            Intent intent = new Intent(ScheduleActivity.this, UserActivity.class);
-            startActivity(intent);
+            User user = UserManager.getInstance().getUser();
+            if (user.getRole().equals(Role.ADMIN.name())) {
+                Intent intent = new Intent(ScheduleActivity.this, AdminActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(ScheduleActivity.this, UserActivity.class);
+                startActivity(intent);
+            }
         });
     }
 

@@ -16,15 +16,22 @@
     <string name="txt_password">Mật khẩu</string>
     <string name="btn_login">Đăng nhập</string>
     <string name="btn_register">Đăng ký</string>
+
     <string name="title_activity_user">UserActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_statistic">Statistic</string>
-    <string name="title_history">History</string>
-    <string name="title_categories">Categories</string>
+    <string name="title_schedule">Lịch trình</string>
+    <string name="title_statistic">Thống kê</string>
+    <string name="title_history">Lịch sử</string>
+    <string name="title_categories">Loại lịch trình</string>
+
     <string-array name="remind_times">
         <item>10 minutes</item>
         <item>30 minutes</item>
         <item>1 hour</item>
         <item>2 hours</item>
     </string-array>
+
+    <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_user">Người dùng</string>
+    <string name="title_sound">Âm thanh</string>
+    <string name="title_schedule_manage">Quản lý lịch trình</string>
 </resources>

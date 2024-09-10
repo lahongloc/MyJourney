@@ -9,6 +9,7 @@ import com.example.personalschedulemanagementapp.data.DatabaseHelper;
 import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.Schedule;
 import com.example.personalschedulemanagementapp.entity.Status;
+import com.example.personalschedulemanagementapp.entity.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,32 @@ public class ScheduleDAO {
         dbHelper = new DatabaseHelper(context);
         database = dbHelper.getWritableDatabase();
     }
+
+    public List<Schedule> getSchedulesByUserId(int userId, Context context) {
+        List<Schedule> schedules = new ArrayList<>();
+        String[] columns = {
+                DatabaseHelper.COLUMN_SCHEDULE_ID,
+                DatabaseHelper.COLUMN_SCHEDULE_CATEGORY_ID,
+                DatabaseHelper.COLUMN_SCHEDULE_USER_ID,
+                DatabaseHelper.COLUMN_SCHEDULE_TITLE,
+                DatabaseHelper.COLUMN_SCHEDULE_DESCRIPTION,
+                DatabaseHelper.COLUMN_SCHEDULE_TIME,
+                DatabaseHelper.COLUMN_SCHEDULE_STATUS
+        };
+
+        String selection = DatabaseHelper.COLUMN_SCHEDULE_USER_ID + " = ?";
+        String[] selectionArgs = { String.valueOf(userId) };
+
+        try (Cursor cursor = database.query(DatabaseHelper.TABLE_SCHEDULE, columns, selection, selectionArgs, null, null, null)) {
+            while (cursor.moveToNext()) {
+                Schedule schedule = cursorToSchedule(cursor, context);
+                schedules.add(schedule);
+            }
+        }
+
+        return schedules;
+    }
+
 
     public Map<String, Integer> getScheduleCountByCategory() {
         Map<String, Integer> categoryCountMap = new HashMap<>();
@@ -132,6 +159,7 @@ public class ScheduleDAO {
     public long insertOrUpdateSchedule(Schedule schedule) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_SCHEDULE_CATEGORY_ID, schedule.getCategory().getId());
+        values.put(DatabaseHelper.COLUMN_SCHEDULE_USER_ID, schedule.getUser().getId());
         values.put(DatabaseHelper.COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(DatabaseHelper.COLUMN_SCHEDULE_DESCRIPTION, schedule.getDescription());
         values.put(DatabaseHelper.COLUMN_SCHEDULE_TIME, schedule.getTime().getTimeInMillis());
@@ -154,6 +182,7 @@ public class ScheduleDAO {
         String[] columns = {
                 DatabaseHelper.COLUMN_SCHEDULE_ID,
                 DatabaseHelper.COLUMN_SCHEDULE_CATEGORY_ID,
+                DatabaseHelper.COLUMN_SCHEDULE_USER_ID,
                 DatabaseHelper.COLUMN_SCHEDULE_TITLE,
                 DatabaseHelper.COLUMN_SCHEDULE_DESCRIPTION,
                 DatabaseHelper.COLUMN_SCHEDULE_TIME,
@@ -213,6 +242,7 @@ public class ScheduleDAO {
         String[] columns = {
                 DatabaseHelper.COLUMN_SCHEDULE_ID,
                 DatabaseHelper.COLUMN_SCHEDULE_CATEGORY_ID,
+                DatabaseHelper.COLUMN_SCHEDULE_USER_ID,
                 DatabaseHelper.COLUMN_SCHEDULE_TITLE,
                 DatabaseHelper.COLUMN_SCHEDULE_DESCRIPTION,
                 DatabaseHelper.COLUMN_SCHEDULE_TIME,
@@ -232,6 +262,7 @@ public class ScheduleDAO {
     private Schedule cursorToSchedule(Cursor cursor, Context context) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_ID));
         int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_CATEGORY_ID));
+        int userId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_USER_ID));
         String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_TITLE));
         String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_DESCRIPTION));
         long timeMillis = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDULE_TIME));
@@ -240,13 +271,10 @@ public class ScheduleDAO {
         Calendar time = Calendar.getInstance();
         time.setTimeInMillis(timeMillis);
 
-        // You may want to retrieve the Category based on the categoryId if needed
-        // For simplicity, assuming a method getCategoryById in CategoryDAO
         Category category = new CategoryDAO(context).getCategoryById(categoryId);
+        User user = new UserDAO(context).getUserById(userId);
 
-
-        // Returning a new Schedule object
-        return new Schedule(id, title, description, time, status, category); // You can set the category as needed
+        return new Schedule(id, title, description, time, status, category, user);
     }
 
     // Delete a schedule

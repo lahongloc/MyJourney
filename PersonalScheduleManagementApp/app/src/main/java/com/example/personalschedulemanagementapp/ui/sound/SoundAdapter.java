@@ -1,4 +1,4 @@
-package com.example.personalschedulemanagementapp;
+package com.example.personalschedulemanagementapp.ui.sound;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,11 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.personalschedulemanagementapp.R;
 import com.example.personalschedulemanagementapp.entity.Sound;
 
 import java.util.List;
 
-public class SoundListAdapter extends ArrayAdapter<Sound> {
+public class SoundAdapter extends ArrayAdapter<Sound> {
 
     private OnSoundClickListener listener;
 
@@ -20,7 +21,7 @@ public class SoundListAdapter extends ArrayAdapter<Sound> {
         void onDeleteClick(Sound sound);
     }
 
-    public SoundListAdapter(Context context, List<Sound> sounds, OnSoundClickListener listener) {
+    public SoundAdapter(Context context, List<Sound> sounds, OnSoundClickListener listener) {
         super(context, 0, sounds);
         this.listener = listener;
     }

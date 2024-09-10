@@ -1,20 +1,18 @@
-package com.example.personalschedulemanagementapp.ui.home;
+package com.example.personalschedulemanagementapp.ui.schedule;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.personalschedulemanagementapp.R;
 import com.example.personalschedulemanagementapp.entity.Schedule;
 import com.example.personalschedulemanagementapp.entity.Status;
-import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,7 +71,7 @@ public class ScheduleAdapter extends BaseAdapter {
             TextView timeTextView = convertView.findViewById(R.id.tvScheduleTime);
             TextView statusTextView = convertView.findViewById(R.id.tvScheduleStatus);
             TextView categoryTextView = convertView.findViewById(R.id.tvScheduleCategory);
-            Button deleteButton = convertView.findViewById(R.id.btnScheduleDelete);
+            ImageButton deleteButton = convertView.findViewById(R.id.btnScheduleDelete);
 
             titleTextView.setText(schedule.getTitle());
 

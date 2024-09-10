@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -46,9 +47,14 @@ public class CategoriesFragment extends Fragment {
             // Xử lý sự kiện nhấn nút xóa
             Category categoryToDelete = categoryAdapter.getItem(position);
             if (categoryToDelete != null) {
-                categoryDAO.deleteCategory(categoryToDelete.getId()); // Xóa dữ liệu khỏi cơ sở dữ liệu
-                categories.remove(position); // Xóa mục khỏi danh sách
-                categoryAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                int result = categoryDAO.deleteCategory(categoryToDelete.getId()); // Xóa dữ liệu khỏi cơ sở dữ liệu
+                if (result > 0) {
+                    categories.remove(position); // Xóa mục khỏi danh sách
+                    categoryAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                    Toast.makeText(binding.getRoot().getContext(), "Xóa loại lịch trình thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(binding.getRoot().getContext(), "Xóa loại lịch trình thất bại", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

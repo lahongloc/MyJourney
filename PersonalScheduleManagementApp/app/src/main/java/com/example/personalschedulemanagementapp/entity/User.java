@@ -1,5 +1,7 @@
 package com.example.personalschedulemanagementapp.entity;
 
+import androidx.annotation.NonNull;
+
 public class User {
     private int id;
     private String username;
@@ -65,5 +67,11 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.fullName;
     }
 }

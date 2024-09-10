@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.dao.UserDAO;
+import com.example.personalschedulemanagementapp.entity.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,8 +44,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (userId > 0) {
                     Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
+
+                    User user = UserManager.getInstance().getUser();
+                    if (user != null) {
+                        Intent intent = new Intent(RegisterActivity.this, AdminActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
                     Toast.makeText(this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
                 }

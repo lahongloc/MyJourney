@@ -15,25 +15,18 @@
         android:theme="@style/Theme.PersonalScheduleManagementApp"
         tools:targetApi="24">
         <activity
-            android:name=".SoundListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddSoundActivity"
-            android:exported="false" />
+            android:name=".AdminActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin" />
         <activity
             android:name=".AddUserActivity"
             android:exported="false" />
-
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
-
         <activity
             android:name=".EditUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UserListActivity"
             android:exported="false" />
         <activity
             android:name=".ScheduleActivity"
@@ -42,14 +35,14 @@
             android:name=".CategoryActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".UserActivity"
             android:exported="false"
             android:label="@string/title_activity_user" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".UserActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">
             <intent-filter>
@@ -59,4 +52,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

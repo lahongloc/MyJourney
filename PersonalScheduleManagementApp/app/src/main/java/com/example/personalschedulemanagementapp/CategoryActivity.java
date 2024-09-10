@@ -15,7 +15,9 @@ import com.example.personalschedulemanagementapp.dao.CategoryDAO;
 import com.example.personalschedulemanagementapp.dao.SoundDAO;
 import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.RemindTime;
+import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.entity.Sound;
+import com.example.personalschedulemanagementapp.entity.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -113,7 +115,7 @@ public class CategoryActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Sound selectedSound = (Sound) parentView.getSelectedItem();
                 SoundHelper soundHelper = new SoundHelper();
-//                soundHelper.playNotificationSound(CategoryActivity.this, selectedSound.getSoundId());
+                soundHelper.playNotificationSound(CategoryActivity.this, selectedSound.getSoundId());
                 category.setSound(selectedSound);
             }
 
@@ -146,8 +148,14 @@ public class CategoryActivity extends AppCompatActivity {
             else
                 Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(CategoryActivity.this, UserActivity.class);
-            startActivity(intent);
+            User user = UserManager.getInstance().getUser();
+            if (user.getRole().equals(Role.ADMIN.name())) {
+                Intent intent = new Intent(CategoryActivity.this, AdminActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(CategoryActivity.this, UserActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }

@@ -59,7 +59,7 @@ public class EditUserActivity extends AppCompatActivity {
         }
 
         cancelButton.setOnClickListener(view -> {
-                Intent userListIntent = new Intent(this, UserListActivity.class);
+                Intent userListIntent = new Intent(this, AdminActivity.class);
                 startActivity(userListIntent);
         });
 

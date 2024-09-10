@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "jn.db";
+    private static final String DATABASE_NAME = "journey";
     private static final int DATABASE_VERSION = 1;
 
     // Table names
@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Schedule Table Columns
     public static final String COLUMN_SCHEDULE_ID = "id";
     public static final String COLUMN_SCHEDULE_CATEGORY_ID = "categoryId";
-//    public static final String COLUMN_SCHEDULE_SOUND = "sound";
+    public static final String COLUMN_SCHEDULE_USER_ID = "userId";
     public static final String COLUMN_SCHEDULE_TITLE = "title";
     public static final String COLUMN_SCHEDULE_DESCRIPTION = "description";
     public static final String COLUMN_SCHEDULE_TIME = "time";
@@ -76,12 +76,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_SCHEDULE + " (" +
                     COLUMN_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_SCHEDULE_CATEGORY_ID + " INTEGER, " +
-//                    COLUMN_SCHEDULE_SOUND + " TEXT, " +
+                    COLUMN_SCHEDULE_USER_ID + " INTEGER, " +
                     COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL, " +
                     COLUMN_SCHEDULE_DESCRIPTION + " TEXT, " +
                     COLUMN_SCHEDULE_TIME + " INTEGER, " +
                     COLUMN_SCHEDULE_STATUS + " TEXT, " +
+                    "FOREIGN KEY(" + COLUMN_SCHEDULE_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "), " +
                     "FOREIGN KEY(" + COLUMN_SCHEDULE_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "));";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

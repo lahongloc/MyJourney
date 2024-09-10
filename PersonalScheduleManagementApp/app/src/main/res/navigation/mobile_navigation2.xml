@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_user">
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="com.example.personalschedulemanagementapp.ui.user.UserFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_user" />
+
+    <fragment
+        android:id="@+id/navigation_categories"
+        android:name="com.example.personalschedulemanagementapp.ui.categories.CategoriesFragment"
+        android:label="@string/title_categories"
+        tools:layout="@layout/fragment_categories" />
+
+    <fragment
+        android:id="@+id/navigation_sound"
+        android:name="com.example.personalschedulemanagementapp.ui.sound.SoundFragment"
+        android:label="@string/title_sound"
+        tools:layout="@layout/fragment_sound" />
+
+    <fragment
+        android:id="@+id/navigation_schedule_manage"
+        android:name="com.example.personalschedulemanagementapp.ui.schedule_manage.ScheduleManageFragment"
+        android:label="@string/title_schedule_manage"
+        tools:layout="@layout/fragment_schedule_manage" />
+</navigation>

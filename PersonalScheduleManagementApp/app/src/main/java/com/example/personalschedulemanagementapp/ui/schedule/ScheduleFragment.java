@@ -1,4 +1,4 @@
-package com.example.personalschedulemanagementapp.ui.home;
+package com.example.personalschedulemanagementapp.ui.schedule;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,13 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.personalschedulemanagementapp.ScheduleActivity;
 import com.example.personalschedulemanagementapp.dao.ScheduleDAO;
-import com.example.personalschedulemanagementapp.databinding.FragmentHomeBinding;
+import com.example.personalschedulemanagementapp.databinding.FragmentScheduleBinding;
 import com.example.personalschedulemanagementapp.entity.Schedule;
 import com.example.personalschedulemanagementapp.entity.Status;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,9 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HomeFragment extends Fragment {
+public class ScheduleFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
+    private FragmentScheduleBinding binding;
     private ListView listViewSchedules;
     private ScheduleAdapter scheduleAdapter;
     private List<Schedule> schedules;
@@ -31,7 +32,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentScheduleBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         listViewSchedules = binding.listViewSchedules;
@@ -53,9 +54,14 @@ public class HomeFragment extends Fragment {
             Schedule scheduleToDelete = scheduleAdapter.getItem(position);
             if (scheduleToDelete != null) {
                 scheduleToDelete.cancelAlarmsForSchedule(binding.getRoot().getContext());
-                scheduleDAO.deleteSchedule(scheduleToDelete.getId()); // Xóa dữ liệu khỏi cơ sở dữ liệu
-                schedules.remove(position); // Xóa mục khỏi danh sách
-                scheduleAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                int result = scheduleDAO.deleteSchedule(scheduleToDelete.getId()); // Xóa dữ liệu khỏi cơ sở dữ liệu
+                if (result > 0) {
+                    schedules.remove(position); // Xóa mục khỏi danh sách
+                    scheduleAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                    Toast.makeText(binding.getRoot().getContext(), "Xóa lịch trình thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(binding.getRoot().getContext(), "Xóa lịch trình thất bại", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

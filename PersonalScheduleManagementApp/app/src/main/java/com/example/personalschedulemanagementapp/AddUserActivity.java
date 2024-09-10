@@ -54,7 +54,7 @@ public class AddUserActivity extends AppCompatActivity {
     }
 
     private void navigateToUserListActivity() {
-        Intent intent = new Intent(this, UserListActivity.class);
+        Intent intent = new Intent(this, AdminActivity.class);
         startActivity(intent);
         finish(); // Close the current activity
     }

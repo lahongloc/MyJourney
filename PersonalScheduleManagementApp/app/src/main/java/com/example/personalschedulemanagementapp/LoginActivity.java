@@ -55,17 +55,17 @@ public class LoginActivity extends AppCompatActivity {
             else {
                 UserDAO userDAO = new UserDAO(this);
                 User user = userDAO.getUserByUsername(username, password);
+                UserManager.getInstance().setUser(user);
 
                 if (Objects.isNull(user)) {
                     Toast.makeText(this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                     if (user.getRole().equals(Role.ADMIN.name())) {
-                        Intent intent = new Intent(this, UserListActivity.class);
+                        Intent intent = new Intent(this, AdminActivity.class);
                         startActivity(intent);
                     } else if (user.getRole().equals(Role.USER.name())) {
                         Intent intent = new Intent(this, UserActivity.class);
-//                        Intent intent = new Intent(this, SoundListActivity.class);
                         startActivity(intent);
                     }
                 }

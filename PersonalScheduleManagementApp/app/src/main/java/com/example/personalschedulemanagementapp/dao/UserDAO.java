@@ -112,6 +112,51 @@ public class UserDAO {
         }
     }
 
+    public List<User> getUsersByRole(String role) {
+        List<User> users = new ArrayList<>();
+        // Define the columns to retrieve
+        String[] columns = {
+                DatabaseHelper.COLUMN_USER_ID,
+                DatabaseHelper.COLUMN_USER_USERNAME,
+                DatabaseHelper.COLUMN_USER_PASSWORD,
+                DatabaseHelper.COLUMN_USER_FULLNAME,
+                DatabaseHelper.COLUMN_USER_EMAIL,
+                DatabaseHelper.COLUMN_USER_ROLE
+        };
+
+        // Define the selection criteria
+        String selection = DatabaseHelper.COLUMN_USER_ROLE + " = ?";
+        String[] selectionArgs = { role };
+
+        // Perform the query
+        Cursor cursor = database.query(
+                DatabaseHelper.TABLE_USER,
+                columns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        // Iterate over the results
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_ID));
+            String username = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_USERNAME));
+            String password = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_PASSWORD));
+            String fullname = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_FULLNAME));
+            String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_EMAIL));
+            String userRole = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_USER_ROLE));
+
+            User user = new User(id, username, password, email, fullname, userRole);
+            users.add(user);
+        }
+
+        cursor.close();
+        return users;
+    }
+
+
     public long updateUser(User user) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_USER_USERNAME, user.getUsername());

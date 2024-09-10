@@ -1,5 +1,6 @@
 package com.example.personalschedulemanagementapp;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.personalschedulemanagementapp.dao.CategoryDAO;
 import com.example.personalschedulemanagementapp.dao.SoundDAO;
 import com.example.personalschedulemanagementapp.dao.UserDAO;
+import com.example.personalschedulemanagementapp.data.DatabaseHelper;
 import com.example.personalschedulemanagementapp.entity.Category;
 import com.example.personalschedulemanagementapp.entity.Role;
 import com.example.personalschedulemanagementapp.entity.Sound;
